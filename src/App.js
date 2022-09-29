@@ -1,7 +1,8 @@
-import './App.scss';
+import "./App.scss";
+import TodoTemplate from "./components/TodoTemplate";
 
 function App() {
-  return <div>Hello, lions! 🦁</div>;
+  return <TodoTemplate />;
 }
 
 export default App;
