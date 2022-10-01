@@ -1,28 +1,47 @@
-import { useState } from 'react';
-import './TodoTemplate.scss';
-import TodoHead from '../TodoHead';
-import TodoList from '../TodoList';
-import TodoCreate from '../TodoCreate';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import "./TodoTemplate.scss";
+import TodoHead from "../TodoHead";
+import TodoList from "../TodoList";
+import TodoCreate from "../TodoCreate";
 
 function TodoTemplate() {
-  const [nextId, setNextId] = useState(2);
-  const [todos, setTodos] = useState([
-    { id: 1, text: '세미나 잘 듣기', done: false },
-  ]);
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/api/todos")
+      .then((res) => {
+        setTodos(res.data.todos);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const onToggle = (id) => {
     const newTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, done: !todo.done } : todo
     );
     setTodos(newTodos);
   };
+
   const onRemove = (id) => {
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
+    axios
+      .delete(`/api/todos/${id}/`)
+      .then((res) => {
+        const newTodos = todos.filter((todo) => todo.id !== id);
+        setTodos(newTodos);
+      })
+      .catch((err) => console.log(err));
   };
+  
   const onCreate = (text) => {
-    const newTodos = [...todos, { id: nextId, text, done: false }];
-    setTodos(newTodos);
-    setNextId(nextId + 1);
+    const newTodo = { text };
+    axios
+      .post("/api/todos/create/", newTodo)
+      .then((res) => {
+        setTodos([...todos, res.data.todo]);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
