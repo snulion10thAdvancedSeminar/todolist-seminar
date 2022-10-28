@@ -8,24 +8,26 @@ import { checkApiResponseStatus } from '../../utils/auth';
 
 import './TodoTemplate.scss';
 
+axios.defaults.withCredentials = true;
+
 function TodoTemplate() {
     const [todos, setTodos] = useState([]);
 
     useEffect(() => {
         axios
-            .get('/api/todos')
+            .get('http://localhost:8000/api/todos/')
             .then((res) => {
                 setTodos(res.data.todos);
             })
             .catch((error) => {
                 console.log(error);
-                checkApiResponseStatus(error.response.status);
+                // checkApiResponseStatus(error.response.status);
             });
     }, []);
 
     const onToggle = (id) => {
         axios
-            .patch(`/api/todos/${id}/check/`)
+            .patch(`http://localhost:8000/api/todos/${id}/check/`)
             .then(() => {
                 const newTodos = todos.map((todo) => (todo.id === id ? { ...todo, done: !todo.done } : todo));
                 setTodos(newTodos);
@@ -38,7 +40,7 @@ function TodoTemplate() {
 
     const onUpdate = (id, text) => {
         axios
-            .patch(`/api/todos/${id}/`, { text })
+            .patch(`http://localhost:8000/api/todos/${id}/`, { text })
             .then(() => {
                 const newTodos = todos.map((todo) => (todo.id === id ? { ...todo, text: text } : todo));
                 setTodos(newTodos);
@@ -51,7 +53,7 @@ function TodoTemplate() {
 
     const onRemove = (id) => {
         axios
-            .delete(`/api/todos/${id}/`)
+            .delete(`http://localhost:8000/api/todos/${id}/`)
             .then(() => {
                 const newTodos = todos.filter((todo) => todo.id !== id);
                 setTodos(newTodos);
@@ -65,7 +67,7 @@ function TodoTemplate() {
     const onCreate = (text) => {
         const newTodo = { text };
         axios
-            .post('/api/todos/create/', newTodo)
+            .post('http://localhost:8000/api/todos/create/', newTodo)
             .then((res) => {
                 setTodos([...todos, res.data.todo]);
             })

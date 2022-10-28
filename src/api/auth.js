@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { checkApiResponseStatus } from '../utils/auth';
 
+axios.defaults.withCredentials = true;
+
 export const signUp = ({ username, password }) => {
     axios
-        .post('/api/accounts/signup/', { username, password })
+        .post('http://localhost:8000/api/accounts/signup/', { username, password })
         .then((res) => {
             console.log(res);
             alert('회원가입 완료');
@@ -15,7 +17,7 @@ export const signUp = ({ username, password }) => {
 
 export const login = ({ username, password }) => {
     axios
-        .post('/api/accounts/login/', { username, password })
+        .post('http://localhost:8000/api/accounts/login/', { username, password })
         .then((res) => {
             console.log(res);
             window.sessionStorage.setItem('isLoggedIn', true);
@@ -28,7 +30,7 @@ export const login = ({ username, password }) => {
 
 export const logout = () => {
     axios
-        .post('/api/accounts/logout/')
+        .post('http://localhost:8000/api/accounts/logout/')
         .then(() => {
             window.sessionStorage.clear();
             window.location.reload();
